@@ -135,22 +135,48 @@ class BinaryTree {
    * serialize(tree): serialize the BinaryTree object tree into a string. */
 
   static serialize() {
+    const values = [];
 
+    function traverse(node) {
+      if (node) {
+        values.push(node.val);
+        traverse(node.left);
+        traverse(node.right);
+      } else {
+        values.push("#");
+      }
+    }
+
+    traverse(tree.root);
+    return values.join(" ");
   }
 
   /** Further study!
    * deserialize(stringTree): deserialize stringTree into a BinaryTree object. */
 
   static deserialize() {
+    if (!stringTree) return null;
 
-  }
+    const values = stringTree.split(" ");
 
-  /** Further study!
-   * lowestCommonAncestor(node1, node2): find the lowest common ancestor
-   * of two nodes in a binary tree. */
+    function buildTree() {
+      // building a tree starting from the beginning of the array
+      if (values.length) {
+        const currentVal = values.shift();
 
-  lowestCommonAncestor(node1, node2) {
-    
+        if (currentVal === "#") return null;
+
+        // remember to convert values back into numbers
+        let currentNode = new BinaryTreeNode(+currentVal);
+        currentNode.left = buildTree();
+        currentNode.right = buildTree();
+
+        return currentNode;
+      }
+    }
+
+    const root = buildTree();
+    return new BinaryTree(root);
   }
 }
 
